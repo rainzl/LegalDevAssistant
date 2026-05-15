@@ -12,6 +12,7 @@
 - [docs/api/README.md](docs/api/README.md) — 接口叙事契约（不变式、错误语义、示例与非功能补充）
 - [docs/defense-one-pager.md](docs/defense-one-pager.md) — **答辩一页纸**（打印/口播：边界、数据流、演示三步、免责与效果口径）
 - [docs/USAGE.md](docs/USAGE.md) — **推广版使用说明**（启动方式 + 案号/文书/合规 **7 条 Web 案例** + **curl** 示例）
+- [docs/github-push-故障排除.md](docs/github-push-故障排除.md) — **GitHub 推送失败**（HTTPS 443 不通、改用 SSH:443、公钥与代理）
 
 ## 超时（HTTP）映射声明（实现必填）
 
