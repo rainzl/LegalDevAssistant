@@ -1,0 +1,350 @@
+openapi: 3.0.3
+info:
+  title: Legal Dev Assistant MVP API
+  description: >
+    Contract for the competition MVP — three pillars only: case-number validation,
+    single fixed document-extract pipeline (`civil-judgment-v1`), compliance scan.
+    Non-functional expectation (product): typical request handling within 10 seconds;
+    overrun returns HTTP 504 Gateway Timeout with ErrorResponse (`error=REQUEST_TIMEOUT`), globally
+    consistent across all three MVP routes — frozen in repository README (see docs/api/nfr-and-timeout.md).
+    Wall-clock timeouts MUST NOT be represented as HTTP 422 on document extract.
+    No login, API keys, audit logs, runtime cloud LLM, or business-data egress to public internet.
+
+    Narrative contract supplements (invariants, errors, NFR/offline semantics, curl examples):
+    docs/api/README.md — index; docs/api/nfr-and-timeout.md — timeout/offline; docs/api/errors.md;
+    docs/api/invariants.md; docs/api/examples.md.
+
+  version: 0.1.0-mvp
+
+tags:
+  - name: CaseNumber
+  - name: DocumentExtract
+  - name: Compliance
+
+paths:
+  # MVP paths — conditional field rules: docs/api/invariants.md
+  /api/v1/case-number/validate:
+    post:
+      tags: [CaseNumber]
+      summary: Validate a candidate judicial case identifier
+      operationId: validateCaseNumber
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CaseNumberValidateRequest'
+            examples:
+              valid:
+                summary: syntactic valid placeholder
+                value:
+                  candidate: "（2022）鄂0102民初12345号"
+      responses:
+        '200':
+          description: Structured validation outcome
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaseNumberValidateResponse'
+        '400':
+          description: Malformed request body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '504':
+          $ref: '#/components/responses/GatewayTimeout'
+
+  /api/v1/document/extract:
+    post:
+      tags: [DocumentExtract]
+      summary: Run the single MVP extract pipeline (fixed schema version)
+      operationId: extractDocument
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DocumentExtractRequest'
+            examples:
+              success:
+                value:
+                  pipelineId: civil-judgment-v1
+                  schemaVersion: "2026-05-13"
+                  content: |
+                    （2022）鄂0102民初12345号
+                    XX市XX区人民法院民事判决书……
+                  contentType: text/plain
+                  encoding: UTF-8
+      responses:
+        '200':
+          description: Parsed fields conforming to CivilJudgmentV1Extract schema
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentExtractResponse'
+        '400':
+          description: Malformed request (e.g. missing pipelineId or content)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: >
+            Structured extract failure — input does not match this pipeline /
+            insufficient markers / schema mismatch. MUST NOT escalate to remote LLM.
+            MUST NOT be used for wall-clock processing timeout (use HTTP 504 + ErrorResponse per README).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExtractErrorResponse'
+              examples:
+                pipelineMismatch:
+                  summary: Non-judgment body for frozen pipeline (golden S2-OOR)
+                  value:
+                    errorCode: PIPELINE_MISMATCH
+                    message: Text does not match the frozen civil-judgment-v1 markers for MVP.
+        '504':
+          $ref: '#/components/responses/GatewayTimeout'
+
+  /api/v1/compliance/scan:
+    post:
+      tags: [Compliance]
+      summary: Locally rule-driven compliance scan over pasted code or prose
+      operationId: scanCompliance
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ComplianceScanRequest'
+      responses:
+        '200':
+          description: Findings referencing local rule identifiers
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ComplianceScanResponse'
+        '400':
+          description: Malformed request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '504':
+          $ref: '#/components/responses/GatewayTimeout'
+
+components:
+  responses:
+    GatewayTimeout:
+      description: >
+        Processing budget exhausted (default ≤10s per README / docs/buchong.md).
+        Same semantics on all three MVP POST routes. Body is ErrorResponse with error=REQUEST_TIMEOUT.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            requestTimeout:
+              summary: Frozen MVP shape (README)
+              value:
+                error: REQUEST_TIMEOUT
+                message: 处理超时，请缩短输入或稍后重试。
+
+  schemas:
+    CaseNumberValidateRequest:
+      type: object
+      required: [candidate]
+      properties:
+        candidate:
+          type: string
+          description: Raw string as typed or pasted by the user
+      additionalProperties: false
+
+    CaseNumberValidateResponse:
+      type: object
+      required: [valid]
+      properties:
+        valid:
+          type: boolean
+        normalized:
+          type: string
+          nullable: true
+          description: Canonical normalized form when valid
+        reasonCode:
+          type: string
+          nullable: true
+          description: Stable machine-readable reason when invalid
+        message:
+          type: string
+          description: Human-readable explanation
+        ruleRefs:
+          type: array
+          items:
+            $ref: '#/components/schemas/RuleRef'
+          description: Traceability to YAML/JSON standard library rules
+
+    RuleRef:
+      type: object
+      required: [ruleId]
+      properties:
+        ruleId:
+          type: string
+          example: "CN-YEAR-SP-001"
+        libraryVersion:
+          type: string
+          example: stdlib-case-number@v0.1.0-demo
+
+    DocumentExtractRequest:
+      type: object
+      required: [pipelineId, schemaVersion, content, contentType]
+      properties:
+        pipelineId:
+          type: string
+          enum: [civil-judgment-v1]
+          description: ONLY supported pipeline id in MVP
+        schemaVersion:
+          type: string
+          enum:
+            - "2026-05-13"
+          description: Frozen MVP extract schema date — must match docs/mvp-acceptance.md and golden fixtures
+          example: "2026-05-13"
+        content:
+          type: string
+          description: Plain text body of synthetic demo judgment excerpt
+          maxLength: 500000
+        contentType:
+          type: string
+          enum: [text/plain]
+        encoding:
+          type: string
+          default: UTF-8
+          enum: [UTF-8]
+      additionalProperties: false
+
+    CivilJudgmentV1Extract:
+      type: object
+      description: Frozen output envelope for pipeline civil-judgment-v1 @ 2026-05-13
+      required:
+        - pipelineId
+        - schemaVersion
+        - courtNameSnippet
+        - caseNumberRaw
+        - causeSnippet
+      properties:
+        pipelineId:
+          type: string
+          enum: [civil-judgment-v1]
+        schemaVersion:
+          type: string
+          enum:
+            - "2026-05-13"
+          description: Mirrors request freeze; always the MVP schema freeze date for this pipeline
+        courtNameSnippet:
+          type: string
+          description: >-
+            Inline span as detected (≤120 chars synthetic demo cap in fixtures)
+          maxLength: 120
+        caseNumberRaw:
+          type: string
+        judgementDateISO:
+          type: string
+          format: date
+          nullable: true
+        causeSnippet:
+          type: string
+          description: Narrative excerpt for cause-of-action (案由) cue phrase, bounded demo text
+          maxLength: 200
+      additionalProperties: false
+
+    DocumentExtractResponse:
+      type: object
+      required: [extract]
+      properties:
+        extract:
+          $ref: '#/components/schemas/CivilJudgmentV1Extract'
+
+    ExtractErrorResponse:
+      type: object
+      required: [errorCode, message]
+      properties:
+        errorCode:
+          type: string
+          enum:
+            - PIPELINE_MISMATCH
+            - INSUFFICIENT_MARKERS
+            - PARSE_TIMEOUT
+            - SCHEMA_INTERNAL
+          description: >
+            Stable client-facing failure codes for HTTP 422 only.
+            PARSE_TIMEOUT is reserved — MVP servers MUST NOT use it for wall-clock budget exhaustion;
+            return HTTP 504 + ErrorResponse (error=REQUEST_TIMEOUT) instead per README.
+        message:
+          type: string
+        ruleRefs:
+          type: array
+          items:
+            $ref: '#/components/schemas/RuleRef'
+
+    ComplianceScanRequest:
+      type: object
+      required: [source]
+      properties:
+        source:
+          type: string
+          description: Code snippet or pasted document fragment (demo only).
+          maxLength: 250000
+        label:
+          type: string
+          maxLength: 128
+          description: Optional user note; not audited in MVP.
+
+    ComplianceSeverity:
+      type: string
+      enum: [deterministic, suspicious, suggestion]
+
+    ComplianceFinding:
+      type: object
+      required: [ruleId, severity, message]
+      properties:
+        ruleId:
+          type: string
+          pattern: '^R-[A-Z0-9-]+$'
+          example: R-DEMO-ID-LIKE-DIGITS
+        severity:
+          $ref: '#/components/schemas/ComplianceSeverity'
+        message:
+          type: string
+        lineHint:
+          type: integer
+          minimum: 1
+          description: Approximate line (1-based) when applicable
+          nullable: true
+        snippet:
+          type: string
+          maxLength: 256
+          description: Bounded redacted/context substring
+
+    ComplianceScanResponse:
+      type: object
+      required: [findings]
+      properties:
+        findings:
+          type: array
+          items:
+            $ref: '#/components/schemas/ComplianceFinding'
+
+    ErrorResponse:
+      type: object
+      required: [error, message]
+      properties:
+        error:
+          type: string
+          description: >
+            Machine-oriented code. Typical values: BAD_REQUEST, INVALID_JSON (optional distinction),
+            REQUEST_TIMEOUT (HTTP 504 per README). OpenAPI does not restrict enum for forward compatibility;
+            see docs/api/errors.md for MVP narrative list.
+          example: BAD_REQUEST
+        message:
+          type: string
+          description: Human-readable explanation (Chinese acceptable for MVP demos)

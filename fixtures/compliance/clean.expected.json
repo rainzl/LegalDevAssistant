@@ -1,0 +1,9 @@
+{
+  "findings": [],
+  "_meta": {
+    "scenarioId": "S3-Scan-Clean",
+    "primaryRuleIds": [],
+    "sourcing": "synthetic-demo",
+    "assertion_notes": "Strict: findings MUST be empty array for fixtures/compliance/clean.sample.txt source."
+  }
+}

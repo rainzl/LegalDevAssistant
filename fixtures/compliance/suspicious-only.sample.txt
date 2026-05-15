@@ -1,0 +1,2 @@
+// Wait for upstream to populate 身份证号码字段 in DTO mapper (demo wording only).
+dto.setPartyName("SYNTH_PARTY");

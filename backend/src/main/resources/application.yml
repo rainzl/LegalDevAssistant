@@ -1,0 +1,27 @@
+# NFR traceability (see README「超时（HTTP）映射声明」):
+# - MVP single-request processing budget: app.processing.timeout-seconds (≤10, aligned with docs/buchong.md).
+# - Concurrency design (~20): Tomcat threads below; bounded task pool for per-request deadline enforcement.
+server:
+  port: 8080
+  tomcat:
+    # Capacity hint: ~20 concurrent MVP requests — worker threads ≥20 per docs/_架构说明_.md §5.2 (small headroom below).
+    threads:
+      max: 32
+      min-spare: 8
+    accept-count: 64
+    max-connections: 256
+
+spring:
+  application:
+    name: legal-dev-mvp
+
+app:
+  stdlib:
+    # Load aggregate index from packaged repo fixtures (see fixtures/stdlib/stdlib-index.v0_1_0_demo.yaml).
+    index-classpath: "classpath:fixtures/stdlib/stdlib-index.v0_1_0_demo.yaml"
+  processing:
+    # Single-request business deadline; controllers enforce via CompletableFuture.get(timeout).
+    timeout-seconds: 10
+  compliance:
+    # lineHint: 1-based line index when engine reports a match (demo fidelity).
+    compute-line-hint: true

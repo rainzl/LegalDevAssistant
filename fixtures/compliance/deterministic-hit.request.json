@@ -1,0 +1,9 @@
+{
+  "source": "// DEMO ONLY — synthetic digit run resembling ID layout; NOT a real person's number.\nconst legacyDemoToken = '9876543210123456789';\nlogDebug(legacyDemoToken);\n",
+  "_meta": {
+    "scenarioId": "S3-Scan-HitDeterministic",
+    "primaryRuleIds": ["R-DEMO-ID-LIKE-DIGITS"],
+    "sourcing": "synthetic-demo",
+    "assertion_notes": "source MUST match fixtures/compliance/deterministic-hit.sample.txt; expect fixtures/compliance/deterministic-hit.expected.json findings."
+  }
+}

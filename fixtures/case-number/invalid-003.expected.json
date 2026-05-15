@@ -1,0 +1,14 @@
+{
+  "valid": false,
+  "normalized": null,
+  "reasonCode": "CN-YEAR-SP-404",
+  "message": "Demo：括号内四位公历年后接法院简称/代字骨架 + 字号尾缀（适配黄金用例 S1-V-001/V-002）。",
+  "ruleRefs": [{ "ruleId": "CN-YEAR-SP-404", "libraryVersion": "stdlib-case-number@v0.1.0-demo" }],
+  "_meta": {
+    "scenarioId": "S1-I-003",
+    "primaryRuleIds": ["CN-YEAR-SP-404"],
+    "messageSourceRuleId": "CN-YEAR-SP-001",
+    "sourcing": "synthetic-demo",
+    "assertion_notes": "演示后端实现：年份 token 存在但 synthetic_accept_pattern 未命中时仍回落 reasonCode=CN-YEAR-SP-404；message 取自 CN-YEAR-SP-001.summary_zh（见 CaseNumberService）。"
+  }
+}

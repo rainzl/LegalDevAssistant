@@ -1,0 +1,25 @@
+---
+# Aggregate index for loaders (optional bootstrap manifest).
+
+version: "0.1.0-demo"
+maintainer: competition-maintainer
+source: synthetic-demo
+loadSequenceNotes_zh: >-
+  MVP 三包独立；服务端加载顺序无硬依赖。
+  建议稳定顺序：`stdlib-case-number` → `stdlib-compliance` → `stdlib-document-pipelines`
+  （便于运维 diff 与人类审阅）。
+libraries:
+  - libraryId: stdlib-case-number
+    bundle: fixtures/stdlib/rules-case-number-demo.yaml
+    loadOrdinal: 1
+    bundleLibraryVersionSynthetic: stdlib-case-number@v0.1.0-demo
+
+  - libraryId: stdlib-compliance
+    bundle: fixtures/stdlib/compliance-rules.v0_1_0_demo.yaml
+    loadOrdinal: 2
+    bundleLibraryVersionSynthetic: stdlib-compliance@v0.1.0-demo
+
+  - libraryId: stdlib-document-pipelines
+    bundle: fixtures/stdlib/document-pipelines.v0_1_0_demo.yaml
+    loadOrdinal: 3
+    bundleLibraryVersionSynthetic: stdlib-document-pipelines@v0.1.0-demo

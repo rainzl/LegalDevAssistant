@@ -1,0 +1,5 @@
+public final class DemoGreeting {
+  public static String hello() {
+    return "hello-local-mvp-demo";
+  }
+}

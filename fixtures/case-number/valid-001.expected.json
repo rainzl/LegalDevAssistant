@@ -1,0 +1,13 @@
+{
+  "valid": true,
+  "normalized": "（2024）鄂0102民初10001号",
+  "reasonCode": null,
+  "message": null,
+  "ruleRefs": [{ "ruleId": "CN-YEAR-SP-001", "libraryVersion": "stdlib-case-number@v0.1.0-demo" }],
+  "_meta": {
+    "scenarioId": "S1-V-001",
+    "primaryRuleIds": ["CN-YEAR-SP-001"],
+    "sourcing": "synthetic-demo",
+    "assertion_notes": "After schema validation: valid===true; ruleRefs MUST contain ruleId CN-YEAR-SP-001. message may be empty or explanatory."
+  }
+}

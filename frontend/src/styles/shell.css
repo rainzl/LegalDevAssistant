@@ -1,0 +1,20 @@
+/**
+ * Visual tokens aligned with Figma Make prototype (legal AI assistant):
+ * sidebar blue-950, main slate-50, light cards on slate borders.
+ */
+:root {
+  --legal-sidebar-bg: #172554;
+  --legal-sidebar-border: #1e3a8a;
+  --legal-sidebar-active: #1e40af;
+  --legal-sidebar-hover: rgba(30, 58, 138, 0.65);
+  --legal-sidebar-muted: #93c5fd;
+  --legal-sidebar-text: #bfdbfe;
+  --legal-main-bg: #f8fafc;
+  --legal-card-border: #e2e8f0;
+  --legal-heading: #1e293b;
+  --legal-body-muted: #64748b;
+  --legal-accent-surface: #eff6ff;
+  --legal-accent-border: #bfdbfe;
+  --legal-accent-heading: #1e3a8a;
+  --legal-accent-body: #1d4ed8;
+}

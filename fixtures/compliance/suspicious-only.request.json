@@ -1,0 +1,9 @@
+{
+  "source": "// Wait for upstream to populate 身份证号码字段 in DTO mapper (demo wording only).\ndto.setPartyName(\"SYNTH_PARTY\");\n",
+  "_meta": {
+    "scenarioId": "S3-Scan-Suspicious",
+    "primaryRuleIds": ["R-DEMO-IDNUM-KEYWORD"],
+    "sourcing": "synthetic-demo",
+    "assertion_notes": "Must match fixtures/compliance/suspicious-only.sample.txt; expect suspicious-only.expected.json."
+  }
+}

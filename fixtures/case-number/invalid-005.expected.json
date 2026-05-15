@@ -1,0 +1,13 @@
+{
+  "valid": false,
+  "normalized": null,
+  "reasonCode": "CN-YEAR-SP-404",
+  "message": "Demo：缺少形如「（YYYY）」的示范年度片段时不视为通过（对齐 S1-I-001）。",
+  "ruleRefs": [{ "ruleId": "CN-YEAR-SP-404", "libraryVersion": "stdlib-case-number@v0.1.0-demo" }],
+  "_meta": {
+    "scenarioId": "S1-I-005",
+    "primaryRuleIds": ["CN-YEAR-SP-404"],
+    "sourcing": "synthetic-demo",
+    "assertion_notes": "Trim 后为空串：无年份 token。"
+  }
+}

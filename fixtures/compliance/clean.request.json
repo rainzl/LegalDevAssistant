@@ -1,0 +1,9 @@
+{
+  "source": "public final class DemoGreeting {\n  public static String hello() {\n    return \"hello-local-mvp-demo\";\n  }\n}\n",
+  "_meta": {
+    "scenarioId": "S3-Scan-Clean",
+    "primaryRuleIds": [],
+    "sourcing": "synthetic-demo",
+    "assertion_notes": "Must match fixtures/compliance/clean.sample.txt; expect clean.expected.json empty findings."
+  }
+}

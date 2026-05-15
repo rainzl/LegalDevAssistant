@@ -1,0 +1,57 @@
+---
+# Local compliance heuristic catalog — DEMO ONLY (not exhaustive security scanning).
+# Field names aligned with ComplianceFinding in contracts/openapi.yaml.
+
+libraryId: stdlib-compliance
+version: "0.1.0-demo"
+maintainer: competition-maintainer
+source: synthetic-demo
+notes_zh: >-
+  patterns 为正则字面量字符串，仅供 MVP 离线演示；severity 对齐契约枚举 deterministic | suspicious | suggestion。
+
+cleanScanFixtureRefs:
+  description_zh: 合规扫描「零命中」演示束（不映射单一 ruleId；断言 findings 为空）。
+  refs:
+    - fixtures/compliance/clean.sample.txt
+    - fixtures/compliance/clean.request.json
+    - fixtures/compliance/clean.expected.json
+
+dualHitFixtureRefs:
+  description_zh: 同一段文本同时触发 deterministic 正则与 suspicious 关键字（顺序遵循 rules 声明次序）。
+  refs:
+    - fixtures/compliance/both-severities.sample.txt
+    - fixtures/compliance/both-severities.request.json
+    - fixtures/compliance/both-severities.expected.json
+
+rules:
+  - ruleId: R-DEMO-ID-LIKE-DIGITS
+    severity: deterministic
+    # ComplianceFinding.message (OpenAPI) — mirrors fixtures/compliance/*.expected.json
+    message: 检测到超长连续数字串（演示规则：身份证号形态占位，不代表真实证照校验）。
+    message_zh: >-
+      检测到超长连续数字串（演示规则：身份证号形态占位，不代表真实证照校验）。
+    engine: regex
+    pattern: "\\d{15,}"
+    fixtureRefs:
+      - fixtures/compliance/deterministic-hit.sample.txt
+      - fixtures/compliance/deterministic-hit.request.json
+      - fixtures/compliance/deterministic-hit.expected.json
+      - fixtures/compliance/both-severities.sample.txt
+      - fixtures/compliance/both-severities.request.json
+      - fixtures/compliance/both-severities.expected.json
+
+  - ruleId: R-DEMO-IDNUM-KEYWORD
+    severity: suspicious
+    message: 文本中出现与身份证件编号字段相关的字面关键词（示意脱敏评审点）。
+    message_zh: 文本中出现与身份证件编号字段相关的字面关键词（示意脱敏评审点）。
+    engine: literal_any
+    tokens:
+      - 身份证号码
+      - 身份证号
+    fixtureRefs:
+      - fixtures/compliance/suspicious-only.sample.txt
+      - fixtures/compliance/suspicious-only.request.json
+      - fixtures/compliance/suspicious-only.expected.json
+      - fixtures/compliance/both-severities.sample.txt
+      - fixtures/compliance/both-severities.request.json
+      - fixtures/compliance/both-severities.expected.json

@@ -1,0 +1,12 @@
+{
+  "pipelineId": "civil-judgment-v1",
+  "schemaVersion": "2026-05-13",
+  "content": "湖北省武汉市硚口区人民法院\n民事判决书\n\n（2024）鄂0104民初30003号\n\n本案演示审理终结，裁判理由略。\n",
+  "contentType": "text/plain",
+  "encoding": "UTF-8",
+  "_meta": {
+    "scenarioId": "S2-INSUFFICIENT-MARKERS",
+    "sourcing": "synthetic-demo",
+    "assertion_notes": "Missing 案由： cue required by civil-judgment-v1 demo extractor."
+  }
+}

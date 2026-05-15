@@ -1,0 +1,16 @@
+{
+  "extract": {
+    "pipelineId": "civil-judgment-v1",
+    "schemaVersion": "2026-05-13",
+    "courtNameSnippet": "湖北省武汉市江岸区人民法院",
+    "caseNumberRaw": "（2024）鄂0102民初10001号",
+    "judgementDateISO": "2024-11-01",
+    "causeSnippet": "买卖合同纠纷"
+  },
+  "_meta": {
+    "scenarioId": "S2-SUCCESS",
+    "primaryRuleIds": [],
+    "sourcing": "synthetic-demo",
+    "assertion_notes": "Assert equality on fields after schema validation; parsers may tighten whitespace trimming."
+  }
+}

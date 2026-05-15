@@ -1,0 +1,13 @@
+{
+  "valid": false,
+  "normalized": null,
+  "reasonCode": "CN-FORMAT-JUNK",
+  "message": "Demo：与常见中文案号线索严重不符的占位串（对齐 S1-I-002）。",
+  "ruleRefs": [{ "ruleId": "CN-FORMAT-JUNK", "libraryVersion": "stdlib-case-number@v0.1.0-demo" }],
+  "_meta": {
+    "scenarioId": "S1-I-002",
+    "primaryRuleIds": ["CN-FORMAT-JUNK"],
+    "sourcing": "synthetic-demo",
+    "assertion_notes": "Candidate must classify as junk/non-CN-case cues per CN-FORMAT-JUNK demo classifier."
+  }
+}

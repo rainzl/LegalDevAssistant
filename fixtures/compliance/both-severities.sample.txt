@@ -1,0 +1,3 @@
+// DEMO synthetic — digit run + keyword (not real PII).
+const demoDigits = '9876543210123456789';
+// 身份证号仅为演示关键字占位

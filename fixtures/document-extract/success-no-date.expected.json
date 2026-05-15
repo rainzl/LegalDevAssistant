@@ -1,0 +1,16 @@
+{
+  "extract": {
+    "pipelineId": "civil-judgment-v1",
+    "schemaVersion": "2026-05-13",
+    "courtNameSnippet": "湖北省武汉市江汉区人民法院",
+    "caseNumberRaw": "（2024）鄂0103民初20002号",
+    "judgementDateISO": null,
+    "causeSnippet": "租赁合同争议演示"
+  },
+  "_meta": {
+    "scenarioId": "S2-SUCCESS-NO-DATE",
+    "primaryRuleIds": [],
+    "sourcing": "synthetic-demo",
+    "assertion_notes": "judgementDateISO optional — omit 文书日期 line; assert remaining extract fields equality."
+  }
+}

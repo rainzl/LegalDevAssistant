@@ -1,0 +1,13 @@
+{
+  "_http": {
+    "status": 422
+  },
+  "errorCode": "INSUFFICIENT_MARKERS",
+  "message": "正文缺少民事判决书演示管线所需的关键字段标记（法院名称/案号/案由）。",
+  "_meta": {
+    "scenarioId": "S2-INSUFFICIENT-MARKERS",
+    "primaryRuleIds": [],
+    "sourcing": "synthetic-demo",
+    "assertion_notes": "Stable errorCode/message aligned with CivilJudgmentExtractService (MVP demo)."
+  }
+}

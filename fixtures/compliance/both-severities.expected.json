@@ -1,0 +1,20 @@
+{
+  "findings": [
+    {
+      "ruleId": "R-DEMO-ID-LIKE-DIGITS",
+      "severity": "deterministic",
+      "message": "检测到超长连续数字串（演示规则：身份证号形态占位，不代表真实证照校验）。"
+    },
+    {
+      "ruleId": "R-DEMO-IDNUM-KEYWORD",
+      "severity": "suspicious",
+      "message": "文本中出现与身份证件编号字段相关的字面关键词（示意脱敏评审点）。"
+    }
+  ],
+  "_meta": {
+    "scenarioId": "S3-Scan-BothLevels",
+    "primaryRuleIds": ["R-DEMO-ID-LIKE-DIGITS", "R-DEMO-IDNUM-KEYWORD"],
+    "sourcing": "synthetic-demo",
+    "assertion_notes": "findings ORDER equals stdlib-compliance rule declaration order; lineHint optional."
+  }
+}

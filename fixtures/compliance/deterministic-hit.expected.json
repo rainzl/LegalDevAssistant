@@ -1,0 +1,15 @@
+{
+  "findings": [
+    {
+      "ruleId": "R-DEMO-ID-LIKE-DIGITS",
+      "severity": "deterministic",
+      "message": "检测到超长连续数字串（演示规则：身份证号形态占位，不代表真实证照校验）。"
+    }
+  ],
+  "_meta": {
+    "scenarioId": "S3-Scan-HitDeterministic",
+    "primaryRuleIds": ["R-DEMO-ID-LIKE-DIGITS"],
+    "sourcing": "synthetic-demo",
+    "assertion_notes": "Assert findings length>=1 and includes this ruleId+severity+message; lineHint/snippet optional per implementation."
+  }
+}

@@ -1,0 +1,58 @@
+---
+# Frozen MVP document-extract pipelines — aligns with CivilJudgmentV1Extract in contracts/openapi.yaml.
+# Does NOT embed judgment full text templates (no fabricated 裁判文书范文).
+
+libraryId: stdlib-document-pipelines
+version: "0.1.0-demo"
+maintainer: competition-maintainer
+source: synthetic-demo
+# Mirrors components/schemas enums in contracts/openapi.yaml — do not invent new codes here.
+contractExtractErrorCodes:
+  httpStatus: 422
+  errorCodeEnumOnly:
+    - PIPELINE_MISMATCH
+    - INSUFFICIENT_MARKERS
+    - PARSE_TIMEOUT
+    - SCHEMA_INTERNAL
+  notes_zh: >-
+    PARSE_TIMEOUT 语义见 OpenAPI/description：不得用于墙上时钟超限；超限须 HTTP 504 + Error(error=REQUEST_TIMEOUT)，见 docs/api/nfr-and-timeout.md。
+frozenSchemaVersions:
+  - "2026-05-13"
+pipelines:
+  - pipelineId: civil-judgment-v1
+    schemaVersion: "2026-05-13" # MVP 唯一允许的 schemaVersion（与 OpenAPI DocumentExtractRequest / CivilJudgmentV1Extract 枚举一致）。
+    contentTypes:
+      - text/plain
+    encodings:
+      - UTF-8
+    outputEnvelope: CivilJudgmentV1Extract
+    requiredFields:
+      - pipelineId
+      - schemaVersion
+      - courtNameSnippet
+      - caseNumberRaw
+      - causeSnippet
+    optionalFields:
+      - judgementDateISO
+    extractHints_zh: >-
+      实现侧仅针对合成脱敏演示文本抽取固定字段（法院简称片段、括号案号片段、裁判日期可选、案由提示短句）。
+    fixtureRefs:
+      - fixtures/document-extract/success-sample.txt
+      - fixtures/document-extract/success-sample.request.json
+      - fixtures/document-extract/success-sample.expected.json
+    mismatchFixtureRefs:
+      - fixtures/document-extract/pipeline-mismatch-sample.txt
+      - fixtures/document-extract/pipeline-mismatch.request.json
+      - fixtures/document-extract/pipeline-mismatch.expected.json
+    optionalJudgementDateFixtureRefs:
+      description_zh: judgementDateISO 可选字段命中演示（省略「文书日期」行）。
+      refs:
+        - fixtures/document-extract/success-no-date.txt
+        - fixtures/document-extract/success-no-date.request.json
+        - fixtures/document-extract/success-no-date.expected.json
+    insufficientMarkersFixtureRefs:
+      description_zh: 正文含民事判决书标记但缺少案由提示行 → INSUFFICIENT_MARKERS（契约枚举既有值）。
+      refs:
+        - fixtures/document-extract/insufficient-markers-sample.txt
+        - fixtures/document-extract/insufficient-markers.request.json
+        - fixtures/document-extract/insufficient-markers.expected.json

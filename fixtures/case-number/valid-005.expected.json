@@ -1,0 +1,13 @@
+{
+  "valid": true,
+  "normalized": "（2023）浙01民终12号",
+  "reasonCode": null,
+  "message": null,
+  "ruleRefs": [{ "ruleId": "CN-YEAR-SP-001", "libraryVersion": "stdlib-case-number@v0.1.0-demo" }],
+  "_meta": {
+    "scenarioId": "S1-V-005",
+    "primaryRuleIds": ["CN-YEAR-SP-001"],
+    "sourcing": "synthetic-demo",
+    "assertion_notes": "Covers 民终 branch."
+  }
+}

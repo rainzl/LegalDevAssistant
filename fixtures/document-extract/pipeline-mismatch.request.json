@@ -1,0 +1,12 @@
+{
+  "pipelineId": "civil-judgment-v1",
+  "schemaVersion": "2026-05-13",
+  "content": "XX市公安局\n刑事决定书\n\n犯罪嫌疑单位：演练代号「DEMO-X」一案，根据《刑事诉讼法》第一百三十条（演示占位），决定对涉案财物解除查封。\n",
+  "contentType": "text/plain",
+  "encoding": "UTF-8",
+  "_meta": {
+    "scenarioId": "S2-OOR",
+    "sourcing": "synthetic-demo",
+    "assertion_notes": "Expect HTTP 422 and ExtractErrorResponse; assert errorCode per pipeline-mismatch.expected.json."
+  }
+}

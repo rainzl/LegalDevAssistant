@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>3.2.5</version>
+    <relativePath/>
+  </parent>
+
+  <groupId>com.legaldev</groupId>
+  <artifactId>legal-dev-mvp</artifactId>
+  <version>0.1.0-mvp</version>
+  <name>legal-dev-mvp</name>
+  <description>MVP API — case number, document extract, compliance (contract-driven)</description>
+
+  <properties>
+    <java.version>17</java.version>
+    <!-- Set true to omit npm ci / vite build / static copy (e.g. backend-only CI). -->
+    <frontend.skip>false</frontend.skip>
+    <!-- Use locally installed Node/npm instead of downloading a Node distribution. -->
+    <frontend.skip.installnodenpm>true</frontend.skip.installnodenpm>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-validation</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.dataformat</groupId>
+      <artifactId>jackson-dataformat-yaml</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <resources>
+      <!-- Single source of truth: repo fixtures/stdlib → classpath fixtures/stdlib -->
+      <resource>
+        <directory>${project.basedir}/../fixtures/stdlib</directory>
+        <targetPath>fixtures/stdlib</targetPath>
+        <filtering>false</filtering>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+    </resources>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <!-- Default Surefire patterns omit *IT.java; keep `mvn test` running golden fixtures. -->
+          <includes>
+            <include>**/*Test.java</include>
+            <include>**/*Tests.java</include>
+            <include>**/*IT.java</include>
+          </includes>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+      </plugin>
+      <!-- Build Vue (../frontend) and copy dist → classpath:/static/ during package (not mvn test). -->
+      <plugin>
+        <groupId>com.github.eirslett</groupId>
+        <artifactId>frontend-maven-plugin</artifactId>
+        <version>1.15.0</version>
+        <configuration>
+          <workingDirectory>${project.basedir}/../frontend</workingDirectory>
+          <skip>${frontend.skip}</skip>
+          <skip.installnodenpm>${frontend.skip.installnodenpm}</skip.installnodenpm>
+        </configuration>
+        <executions>
+          <execution>
+            <id>install-node-and-npm</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>install-node-and-npm</goal>
+            </goals>
+            <configuration>
+              <nodeVersion>v20.18.0</nodeVersion>
+              <npmVersion>10.8.2</npmVersion>
+            </configuration>
+          </execution>
+          <execution>
+            <id>npm-ci</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+            <configuration>
+              <arguments>ci</arguments>
+            </configuration>
+          </execution>
+          <execution>
+            <id>npm-run-build</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+            <configuration>
+              <arguments>run build</arguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>3.3.1</version>
+        <executions>
+          <execution>
+            <id>copy-frontend-dist-to-static</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <skip>${frontend.skip}</skip>
+              <outputDirectory>${project.build.outputDirectory}/static</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${project.basedir}/../frontend/dist</directory>
+                  <filtering>false</filtering>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

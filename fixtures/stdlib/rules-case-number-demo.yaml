@@ -1,0 +1,77 @@
+---
+# Case-number heuristic rules — DEMO subset for fixtures only (NOT a national rulebook).
+# Rule IDs MUST stay in sync with docs/golden-fixtures.md fixtures/case-number/* row.
+
+libraryId: stdlib-case-number
+version: "0.1.0-demo"
+maintainer: competition-maintainer
+# Heuristic CN-* definitions below are synthetic-demo — not verbatim extracts of any instrument.
+source: synthetic-demo
+# Populates RuleRef.libraryVersion in CaseNumberValidateResponse.ruleRefs (see contracts/openapi.yaml example).
+libraryVersionForRuleRefs: stdlib-case-number@v0.1.0-demo
+
+references_bibliography:
+  - uri: https://www.court.gov.cn/zixun/xiangqing/14970.html
+    title_zh: 最高人民法院关于印发《关于人民法院案件案号的若干规定》及配套标准的通知（官网入口示例）
+    note_zh: >-
+      仅作文书体例背景的公开可查入口；本文件不收录亦不转述法条/配套标准正文，程序化规则仍为 synthetic-demo。
+  - uri: http://gongbao.court.gov.cn/Details/297ad9e013a35e1965a93fd7acea73.html
+    title_zh: 《关于人民法院案件案号的若干规定（修改）》相关公报条目入口（示意）
+    note_zh: >-
+      实现或答辩需核对最新全文时，应以有权机关正式发布文本为准。
+
+rules:
+  - id: CN-YEAR-SP-001
+    summary_zh: >-
+      Demo：括号内四位公历年后接法院简称/代字骨架 + 字号尾缀（适配黄金用例 S1-V-001/V-002）。
+    # When this accept rule dominates a valid classification (S1-V-*); see docs/api/invariants.md.
+    mapsToReasonCodeValid: null
+    kind: synthetic_accept_pattern
+    demoPattern: '^（[0-9]{4}）.*(?:民初|刑初|行初|民终|刑终|行终).*?[0-9]+号$'
+    failureReasonCodes: []
+    fixtureRefs:
+      - fixtures/case-number/valid-001.request.json
+      - fixtures/case-number/valid-002.request.json
+      - fixtures/case-number/valid-003.request.json
+      - fixtures/case-number/valid-004.request.json
+      - fixtures/case-number/valid-005.request.json
+      - fixtures/case-number/valid-006.request.json
+      - fixtures/case-number/valid-001.expected.json
+      - fixtures/case-number/valid-002.expected.json
+      - fixtures/case-number/valid-003.expected.json
+      - fixtures/case-number/valid-004.expected.json
+      - fixtures/case-number/valid-005.expected.json
+      - fixtures/case-number/valid-006.expected.json
+
+  - id: CN-YEAR-SP-404
+    summary_zh: >-
+      Demo：缺少形如「（YYYY）」的示范年度片段时不视为通过（对齐 S1-I-001）。
+    note_zh: >-
+      演示后端 CaseNumberService：除「缺少年份 token」外，当年份存在但 synthetic_accept_pattern 未命中时，
+      reasonCode 亦回落为 CN-YEAR-SP-404（message 取自 CN-YEAR-SP-001.summary_zh）。断言以 fixtures/case-number/*.expected.json 为准。
+    mapsToReasonCodeInvalid: CN-YEAR-SP-404
+    kind: synthetic_reject_missing_token
+    requiredTokenPattern: '（[0-9]{4}）'
+    fixtureRefs:
+      - fixtures/case-number/invalid-001.request.json
+      - fixtures/case-number/invalid-004.request.json
+      - fixtures/case-number/invalid-005.request.json
+      - fixtures/case-number/invalid-006.request.json
+      - fixtures/case-number/invalid-003.request.json
+      - fixtures/case-number/invalid-003.expected.json
+      - fixtures/case-number/invalid-001.expected.json
+      - fixtures/case-number/invalid-004.expected.json
+      - fixtures/case-number/invalid-005.expected.json
+      - fixtures/case-number/invalid-006.expected.json
+
+  - id: CN-FORMAT-JUNK
+    summary_zh: Demo：与常见中文案号线索严重不符的占位串（对齐 S1-I-002）。
+    mapsToReasonCodeInvalid: CN-FORMAT-JUNK
+    kind: synthetic_junk_classifier
+    # Java-safe equivalent of `[%._\-/A-Za-z0-9]` (hyphen last to avoid range parsing ambiguities in java.util.regex)
+    demoPattern: '^[%._/A-Za-z0-9-]+$'
+    note_zh: >-
+      占位：若整串主要由非中文标识符构成且无案号 cues，可归入此类演示拒绝路径。
+    fixtureRefs:
+      - fixtures/case-number/invalid-002.request.json
+      - fixtures/case-number/invalid-002.expected.json

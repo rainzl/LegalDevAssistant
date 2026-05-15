@@ -1,0 +1,15 @@
+{
+  "findings": [
+    {
+      "ruleId": "R-DEMO-IDNUM-KEYWORD",
+      "severity": "suspicious",
+      "message": "文本中出现与身份证件编号字段相关的字面关键词（示意脱敏评审点）。"
+    }
+  ],
+  "_meta": {
+    "scenarioId": "S3-Scan-Suspicious",
+    "primaryRuleIds": ["R-DEMO-IDNUM-KEYWORD"],
+    "sourcing": "synthetic-demo",
+    "assertion_notes": "Must NOT emit deterministic-severity findings for this fixture source; assert ruleId R-DEMO-IDNUM-KEYWORD present."
+  }
+}

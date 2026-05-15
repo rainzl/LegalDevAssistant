@@ -1,0 +1,13 @@
+{
+  "valid": true,
+  "normalized": "（2024）京0101刑初999号",
+  "reasonCode": null,
+  "message": null,
+  "ruleRefs": [{ "ruleId": "CN-YEAR-SP-001", "libraryVersion": "stdlib-case-number@v0.1.0-demo" }],
+  "_meta": {
+    "scenarioId": "S1-V-003",
+    "primaryRuleIds": ["CN-YEAR-SP-001"],
+    "sourcing": "synthetic-demo",
+    "assertion_notes": "Covers 刑初 branch of synthetic_accept_pattern."
+  }
+}

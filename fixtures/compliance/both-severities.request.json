@@ -1,0 +1,9 @@
+{
+  "source": "// DEMO synthetic — digit run + keyword (not real PII).\nconst demoDigits = '9876543210123456789';\n// 身份证号仅为演示关键字占位\n",
+  "_meta": {
+    "scenarioId": "S3-Scan-BothLevels",
+    "primaryRuleIds": ["R-DEMO-ID-LIKE-DIGITS", "R-DEMO-IDNUM-KEYWORD"],
+    "sourcing": "synthetic-demo",
+    "assertion_notes": "source MUST match both-severities.sample.txt (LF)."
+  }
+}

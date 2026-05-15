@@ -1,0 +1,12 @@
+{
+  "pipelineId": "civil-judgment-v1",
+  "schemaVersion": "2026-05-13",
+  "content": "湖北省武汉市江岸区人民法院\n民事判决书\n\n（2024）鄂0102民初10001号\n\n本案系演示用买卖合同纠纷案件。原告某某贸易公司（占位名称），被告某某商行（占位名称）。\n\n案由：买卖合同纠纷。\n经审理查明：双方签订演示购销合同一节，具体内容略。\n\n本院认为（演示）：应当依约另行主张权利。\n\n文书日期：2024-11-01\n",
+  "contentType": "text/plain",
+  "encoding": "UTF-8",
+  "_meta": {
+    "scenarioId": "S2-SUCCESS",
+    "sourcing": "synthetic-demo",
+    "assertion_notes": "content MUST byte-match fixtures/document-extract/success-sample.txt when normalized to LF; compare HTTP 200 body.extract to success-sample.expected.json extract."
+  }
+}

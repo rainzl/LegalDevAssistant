@@ -1,0 +1,3 @@
+// DEMO ONLY — synthetic digit run resembling ID layout; NOT a real person's number.
+const legacyDemoToken = '9876543210123456789';
+logDebug(legacyDemoToken);

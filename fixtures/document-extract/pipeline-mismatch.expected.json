@@ -1,0 +1,13 @@
+{
+  "_http": {
+    "status": 422
+  },
+  "errorCode": "PIPELINE_MISMATCH",
+  "message": "输入正文缺少民事判决书管线所需的固定标记（演示：PIPELINE_MISMATCH）。",
+  "_meta": {
+    "scenarioId": "S2-OOR",
+    "primaryRuleIds": [],
+    "sourcing": "synthetic-demo",
+    "assertion_notes": "Assert HTTP status then errorCode; message SHOULD match this string for MVP regression (implementations may localize later by bumping fixture version)."
+  }
+}
